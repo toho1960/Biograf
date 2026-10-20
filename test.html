@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="cs"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test tablet</title>
+<style>body{font:20px sans-serif;background:#222;color:#fff;padding:20px}.ok{color:#7be39a}.bad{color:#ff9aa6}button{font-size:20px;padding:10px 20px}</style></head>
+<body>
+<h2>Test tabletu</h2>
+<p>1. HTML se zobrazil: <span class="ok">ANO</span></p>
+<p>2. JavaScript: <span id="js" class="bad">NEBĚŽÍ</span></p>
+<p>3. Úložiště (localStorage): <span id="ls" class="bad">?</span></p>
+<p>4. Prohlížeč: <span id="ua"></span></p>
+<p>5. Zadávání souboru: <input type="file" id="f" accept=".csv,text/csv"> <span id="fn"></span></p>
+<p>6. Stránka zůstane viditelná: <span id="t">0</span> s</p>
+<script>
+document.getElementById('js').textContent='BĚŽÍ';document.getElementById('js').className='ok';
+try{localStorage.setItem('t','1');document.getElementById('ls').textContent='OK';document.getElementById('ls').className='ok'}catch(e){document.getElementById('ls').textContent='NEFUNGUJE ('+e.name+')'}
+document.getElementById('ua').textContent=navigator.userAgent;
+document.getElementById('f').onchange=function(e){document.getElementById('fn').textContent=e.target.files[0]?e.target.files[0].name+' ('+e.target.files[0].size+' B)':''};
+var n=0;setInterval(function(){document.getElementById('t').textContent=++n},1000);
+</script></body></html>
