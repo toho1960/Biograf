@@ -158,9 +158,9 @@ h1,.vsign{animation:flick 6s infinite}
             <input id="yTo" type="number" min="1920" max="2026" placeholder="do">
           </div>
         </div>
-        <div class="box"><h3>Země původu</h3><div class="chips" id="cc"></div></div>
         <div class="box"><h3>Žánr chci</h3><div class="chips" id="want"></div></div>
         <div class="box"><h3>Žánr nechci</h3><div class="chips" id="ban"></div></div>
+        <div class="box"><h3>Země původu</h3><div class="chips" id="cc"></div></div>
       </div>
       <div class="box" style="margin-top:18px; background:none; border-style:dashed">
         <h3 style="text-align:center">Kdo půjde do kina?</h3>
@@ -193,6 +193,7 @@ const BUILT_COUNT=MINE.length;
 
 const FIVE=['Crime','Drama','War','Action','Sci-Fi'];
 const GENRES=['Comedy','Drama','Romance','Sci-Fi','Adventure','Action','Crime','Western'];
+const GENRES_BAN=[...GENRES,'Fantasy'];
 /* pořadí hlavního žánru: specifické před obecnými, Romance před Comedy i Drama */
 const PRI=['Musical','Sci-Fi','Western','Horror','Romance','Crime','War','Action','Adventure','Fantasy','Thriller','Mystery','Animation','Film-Noir','Biography','History','Sport','Music','Family','Comedy','Drama'];
 const pr=g=>{const i=PRI.indexOf(g);return i<0?99:i};
@@ -230,9 +231,9 @@ function buildCountryChips(){
 }
 function refreshCountries(){ document.querySelectorAll('#cc .chip').forEach(c=>c.classList.toggle('on',state.cc.has(c.dataset.k))); }
 function buildChips(){
-  for(const [box,key] of [['#want','want'],['#ban','ban']]){
+  for(const [box,key,list] of [['#want','want',GENRES],['#ban','ban',GENRES_BAN]]){
     const el=$(box); el.innerHTML='';
-    GENRES.forEach(g=>{
+    list.forEach(g=>{
       const c=document.createElement('div'); c.className='chip '+key; c.textContent=g; c.dataset.g=g;
       c.onclick=()=>{ if(c.classList.contains('off')) return;
         state[key].has(g)?state[key].delete(g):state[key].add(g); refreshChips(); };
