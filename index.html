@@ -116,8 +116,21 @@ input[type=number]::placeholder{color:#8a7a55; font-weight:400}
 .upd:hover{opacity:.95; box-shadow:0 0 10px rgba(243,201,105,.6)}
 .updmsg{text-align:center; font-size:12px; margin-top:12px; min-height:16px; color:#bfe6c9}
 .updmsg.err{color:#ff9aa6}
-.pavement{margin-top:30px; height:80px; background:linear-gradient(#4a4540,#2a2724); border-top:8px solid #6d655b; text-align:center; padding-top:16px; font-size:12px; opacity:.9}
+.pavement{margin-top:30px; min-height:80px; height:auto; background:linear-gradient(#4a4540,#2a2724); border-top:8px solid #6d655b; text-align:center; padding:16px 14px 22px; font-size:12px; opacity:.9; line-height:1.7}
 .pavement span{opacity:.7}
+.desc-btn{background:none; border:1px solid rgba(243,201,105,.4); color:var(--gold); border-radius:4px; padding:2px 8px; font:600 11px "Trebuchet MS",sans-serif; cursor:pointer; letter-spacing:.5px; opacity:.75; transition:.15s; vertical-align:middle; margin-left:6px}
+.desc-btn:hover{opacity:1; background:rgba(243,201,105,.12); border-color:var(--gold)}
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.82); z-index:100; display:flex; align-items:center; justify-content:center; padding:16px; opacity:0; pointer-events:none; transition:opacity .2s}
+.modal-overlay.open{opacity:1; pointer-events:auto}
+.modal-card{position:relative; background:#1c0e0b; border:4px solid #c79a3c; outline:2px solid #5a1520; outline-offset:-6px; border-radius:8px; color:#f4e8cf; max-width:680px; width:100%; max-height:85vh; overflow-y:auto; padding:24px 28px; box-shadow:0 16px 40px rgba(0,0,0,.9); font:13.5px/1.6 "Trebuchet MS",sans-serif}
+.modal-card h2{font:400 24px Impact,sans-serif; letter-spacing:2px; color:var(--gold); margin:0 0 16px; text-transform:uppercase; text-align:center}
+.modal-card h3{font:700 15px "Trebuchet MS",sans-serif; color:var(--neon2); margin:14px 0 4px; letter-spacing:.5px}
+.modal-card p{margin:0 0 8px; opacity:.92}
+.modal-card ul{margin:0 0 10px 18px; padding:0; opacity:.92}
+.modal-card li{margin-bottom:4px}
+.modal-card b{color:#fff}
+.modal-close{position:absolute; top:12px; right:14px; width:28px; height:28px; background:none; border:1px solid rgba(243,201,105,.5); border-radius:50%; color:var(--gold); font:18px/26px Georgia,serif; cursor:pointer; text-align:center; padding:0; transition:.15s}
+.modal-close:hover{background:rgba(243,201,105,.2); color:#fff}
 /*ANIM-START*/
 @keyframes flick{0%,92%,100%{opacity:1}93%{opacity:.6}94%{opacity:1}96%{opacity:.75}97%{opacity:1}}
 @keyframes bl{0%,100%{opacity:1}50%{opacity:.35}}
@@ -191,7 +204,48 @@ h1,.vsign{animation:flick 6s infinite}
       <button class="btn btn-more" disabled>Jiné návrhy</button>
       <button class="btn btn-fwd" disabled>Vpřed ▶</button>
     </div>
-    <div class="pavement">Data: IMDb datasets (neviděné filmy z USA, VB, ČR, Itálie, Francie s IMDb ≥ 6.5 a ≥ 5 000 hlasy) + tvých hodnocení z IMDb exportu · popisy: česká Wikipedie (jinak Cinemeta / anglická Wikipedie), plakáty: Cinemeta / Wikipedia<br><span>Žánry jsou řazeny od hlavního (např. Romance, Drama).</span></div>
+    <div class="pavement">Data: IMDb datasets (neviděné filmy z USA, VB, ČR, Itálie, Francie s IMDb ≥ 6.5 a ≥ 5 000 hlasy) + tvých hodnocení z IMDb exportu · popisy: česká Wikipedie (jinak Cinemeta / anglická Wikipedie), plakáty: Cinemeta / Wikipedia<br><span>Žánry jsou řazeny od hlavního (např. Romance, Drama).</span> · <button class="desc-btn" id="helpBtn">Popis funkce</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="helpModal" aria-hidden="true">
+  <div class="modal-card">
+    <button class="modal-close" id="helpClose" aria-label="Zavřít">&times;</button>
+    <h2>Jak funguje doporučování</h2>
+    
+    <h3>1. Tvrdý předvýběr (Filtry)</h3>
+    <p>Z katalogu (~7 850 filmů) se nejprve vyberou kandidáti splňující zadané filtry:</p>
+    <ul>
+      <li><b>Roky a země:</b> Film musí spadat do zvolených let a vybraných zemí (USA, Velká Británie, Česko, Itálie, Francie).</li>
+      <li><b>Neviděné filmy:</b> Všechny filmy z vašeho IMDb exportu jsou automaticky vyřazeny.</li>
+      <li><b>Pravidla žánrů:</b> Chtěný žánr musí patřit mezi 2 hlavní žánry filmu. Zakázané žánry film ihned vyřadí.</li>
+      <li><b>Volba diváka:</b> <b>T</b> (Tomáš) = filmy s aspoň jedním žánrem z pětice <i>Crime, Drama, War, Action, Sci-Fi</i>; <b>R</b> (Renata) = filmy bez této pětice; <b>T+R</b> = všechny filmy.</li>
+    </ul>
+
+    <h3>2. Profil diváka z hodnocení</h3>
+    <p>Z vašeho IMDb exportu si aplikace vytvoří profil složený ze 3 pilířů:</p>
+    <ul>
+      <li><b>Žánrový otisk (IDF váha):</b> Vzácnější žánry (např. <i>Film-Noir, Western, Muzikál</i>) mají při porovnání větší váhu než všudypřítomné <i>Drama</i>.</li>
+      <li><b>Oblíbení režiséři:</b> Seznam režisérů, které jste hodnotili, a známky (1–10), které od vás dostali.</li>
+      <li><b>Oblíbené dekády:</b> Statistika dekád, ze kterých pochází nejvíc filmů s hodnocením 7 a vyšším.</li>
+    </ul>
+
+    <h3>3. Výpočet skóre filmu</h3>
+    <p>Každý kandidát získá bodové skóre:</p>
+    <p style="background:rgba(0,0,0,.35); padding:8px 12px; border-left:3px solid var(--gold); border-radius:3px">
+      <b>Skóre</b> = 2 &times; Podobnost + Předpověď hodnocení + Bonus za režiséra + Bonus za dekádu + Objektivní kvalita (IMDb)
+    </p>
+    <ul>
+      <li><b>Podobnost:</b> Najde 10 vašich historických filmů, které jsou danému titulu žánrově a stylově nejblíže.</li>
+      <li><b>Předpověď hodnocení:</b> Vážený průměr vašich známek u nejpodobnějších filmů.</li>
+      <li><b>Bonus za režiséra a dekádu:</b> Přídavek za osvědčené tvůrce a oblíbené filmové éry.</li>
+    </ul>
+
+    <h3>4. Výběr na plátno a náhodnost</h3>
+    <ul>
+      <li>Aplikace vybere <b>25 nejvýše hodnocených filmů</b>.</li>
+      <li>Z nich náhodně vylosuje <b>2 až 3 filmy pomocí vážené pravděpodobnosti</b>. Tím je zajištěno, že tlačítko <i>„Jiné návrhy“</i> nabízí stále nové a pestré kombinace nejlepších kandidátů.</li>
+    </ul>
   </div>
 </div>
 
@@ -516,6 +570,15 @@ $('#csvfile').onchange=async e=>{
 })();
 buildChips();
 buildCountryChips();
+
+/* ---------- nápověda / popis funkce ---------- */
+const helpModal=$('#helpModal');
+const openModal=()=>helpModal.classList.add('open');
+const closeModal=()=>helpModal.classList.remove('open');
+$('#helpBtn').onclick=openModal;
+$('#helpClose').onclick=closeModal;
+helpModal.onclick=e=>{ if(e.target===helpModal) closeModal(); };
+window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
